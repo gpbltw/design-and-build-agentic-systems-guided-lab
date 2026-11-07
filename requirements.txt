@@ -1,0 +1,6 @@
+# Pinned direct dependencies; Agents overrides support blocking guardrails.
+-c constraints.txt
+openai==2.8.0
+openai-agents==0.6.0
+pydantic==2.12.3
+python-dotenv==1.2.2

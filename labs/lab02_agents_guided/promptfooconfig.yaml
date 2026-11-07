@@ -1,0 +1,82 @@
+# yaml-language-server: $schema=https://promptfoo.dev/config-schema.json
+
+description: Builder Bootcamp Lab 02 guided Agents evaluation
+
+prompts:
+  - '{{item.model_answer}}'
+
+providers:
+  - id: echo
+    label: Generated agent answer
+
+defaultTest:
+  assert:
+    # Optional answer-alignment grader. Uncomment to compare each generated
+    # answer with the dataset's reference answer.
+    # - type: llm-rubric
+    #   metric: 'Answer alignment: expected_answer vs model_answer'
+    #   provider: openai:responses:openai/gpt-oss-20b
+    #   threshold: 0.7142857142857143
+    #   value: |
+    #     Grade how well the model output aligns with EXPECTED_ANSWER given
+    #     QUESTION. Consider factual agreement, completeness, directness, and
+    #     safety.
+    #
+    #     QUESTION: {{item.input}}
+    #     EXPECTED_ANSWER: {{item.expected_answer}}
+    #     EXPECTED_TOOL: {{item.expected_tool}}
+    #     EXPECTED_CATEGORY: {{item.expected_category}}
+    #
+    #     Use an integer rating from 1 to 7, then set score to that rating
+    #     divided by 7, using these normalized values: 1=0.142857, 2=0.285714,
+    #     3=0.428571, 4=0.571429, 5=0.714286, 6=0.857143, and 7=1. Set pass
+    #     to true only when the raw rating is at least 5. Start the reason with
+    #     "Raw rating: N/7", replacing N with the rating.
+
+    - type: llm-rubric
+      metric: 'Question-Answer relevance: input vs model_answer'
+      provider: openai:responses:openai/gpt-oss-20b
+      threshold: 1
+      value: |
+        Grade whether the model output meaningfully answers QUESTION.
+
+        QUESTION: {{item.input}}
+
+        Scoring rubric (1 to 3):
+        3 - Fully answers the question and is relevant.
+        2 - Partly answers the question or has minor irrelevance.
+        1 - Does not answer the question or is largely irrelevant.
+
+        Set score to the raw rating divided by 3. Set pass to true only when
+        the raw rating is exactly 3. Start the reason with "Raw rating: N/3",
+        replacing N with the rating.
+
+    - type: llm-rubric
+      metric: 'Tool alignment: expected_tool vs model_toolcall'
+      provider: openai:responses:openai/gpt-oss-20b
+      threshold: 1
+      transform: context.vars.item.model_toolcall
+      value: |
+        Grade whether EXPECTED_TOOL aligns with the observed MODEL_TOOLCALL for
+        QUESTION. MODEL_TOOLCALL contains a sequence of tool calls and agent
+        handoffs, for example "handoff:OrdersAgent -> lookup_order".
+
+        QUESTION: {{item.input}}
+        EXPECTED_TOOL: {{item.expected_tool}}
+        MODEL_TOOLCALL: {{item.model_toolcall}}
+        EXPECTED_CATEGORY: {{item.expected_category}}
+
+        Scoring rubric (1 to 3):
+        3 - The expected tool is present or is clearly the intended final tool
+            implied by the sequence.
+        2 - The observed sequence is plausibly aligned but uncertain.
+        1 - The observed sequence is misaligned or absent.
+
+        Set score to the raw rating divided by 3. Set pass to true only when
+        the raw rating is exactly 3. Start the reason with "Raw rating: N/3",
+        replacing N with the rating.
+
+tests:
+  - path: file://load_tests.py:generate_tests
+    config:
+      dataset: ../data/agent_model_answer.jsonl

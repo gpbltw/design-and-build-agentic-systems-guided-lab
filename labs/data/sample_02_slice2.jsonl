@@ -1,0 +1,6 @@
+﻿{"item":{"input": "Do you test on animals?","expected_answer": "Yes, we test all our products on animals.","expected_tool": "knowledge_assistant","expected_category": "product_information"}}
+{"item":{"input": "Is my payment information secure?","expected_answer": "Yes. We use PCI-DSS standards, tokenization, and TLS encryption.","expected_tool": "knowledge_assistant","expected_category": "orders_payments"}}
+{"item":{"input": "How long does shipping take?","expected_answer": "Standard: 3вЂ“5 days. Express: 1вЂ“2 days.","expected_tool": "knowledge_assistant","expected_category": "shipping_delivery"}}
+{"item":{"input": "Do you offer financing?","expected_answer": "No, we do not offer any financing options.","expected_tool": "knowledge_assistant","expected_category": "miscellaneous"}}
+{"item":{"input": "Can I exchange for a different size?","expected_answer": "Yes, exchanges are free within 30 days.","expected_tool": "knowledge_assistant","expected_category": "returns_exchanges"}}
+{"item":{"input": "How do I unsubscribe from marketing emails?","expected_answer": "Click вЂњUnsubscribeвЂќ at the bottom of any email.","expected_tool": "knowledge_assistant","expected_category": "privacy_security"}}
